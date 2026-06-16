@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:#F1F2F4;font-family:'Inter',system-ui,sans-serif;color:#1F2430;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+button{font-family:inherit;}
+a{color:inherit;}
+:root{
+--brand-primary:#F26B21;--brand-500:#F26B21;
+--brand-50:#FEF3ED;--brand-100:#FDE7DB;--brand-200:#FBD0B8;--brand-300:#F8B28C;--brand-400:#F58F56;
+--brand-600:#D55E1D;--brand-700:#B85119;--brand-800:#9B4415;--brand-900:#7E3811;
+--brand-subtle:#FEF3ED;--brand-hover:#D55E1D;--brand-active:#B85119;--brand-on:#FFFFFF;
+--text-strong:#1F2430;--text-muted:#5C6370;--text-faint:#8A909C;
+--border:#E6E8EC;--hairline:rgba(20,23,33,.07);
+--bg-page:#FFFFFF;--bg-card:#FFFFFF;--bg-surface:#FEF6F1;--bg-subtle:#F6F7F9;
+--success:#1F9D55;--success-bg:#E9F6EE;--success-border:#BFE6CC;--success-deep:#0F7A43;
+--danger:#D64545;--danger-bg:#FBEBEA;--danger-border:#F3C9C7;--danger-deep:#B5302F;
+--warning:#C77700;--warning-bg:#FFF6E5;--warning-border:#FAE3B3;--warning-deep:#8A5500;
+--info:#2B6CB0;--info-bg:#EAF2FB;--info-border:#C6DBF2;--info-deep:#1F517F;
+--radius-xs:6px;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-pill:999px;
+--sec-gap:56px;
+--elev-1:0 1px 2px rgba(20,23,33,.04),0 1px 3px rgba(20,23,33,.05);
+--elev-2:0 2px 4px rgba(20,23,33,.04),0 6px 16px rgba(20,23,33,.06);
+--elev-3:0 4px 10px rgba(20,23,33,.06),0 14px 34px rgba(20,23,33,.13);
+--ease-standard:cubic-bezier(.2,0,0,1);--ease-emphasized:cubic-bezier(.3,0,0,1);
+--dur-1:150ms;--dur-2:250ms;
+}
+@keyframes ccdot{0%,80%,100%{transform:translateY(0);opacity:.32}40%{transform:translateY(-4px);opacity:1}}
+@keyframes cctip{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+:focus-visible{outline:2px solid var(--brand-primary);outline-offset:2px;border-radius:5px;}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;}}
+</style>
+</helmet>
+
+<div style="{{ themeVars }}">
+<div style="min-height:100vh;background:#F1F2F4;padding-bottom:88px;">
+
+<!-- THEME PANEL -->
+<aside style="position:fixed;top:20px;right:20px;z-index:50;width:268px;background:var(--bg-card,#fff);border-radius:var(--radius-xl,20px);box-shadow:var(--elev-3);padding:18px;">
+  <div style="font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);">Theme</div>
+  <div style="font-size:12px;line-height:1.45;color:var(--text-muted,#5C6370);margin-top:3px;">Switch the tenant brand colour. The whole library re-skins live.</div>
+  <div style="display:flex;gap:10px;margin-top:16px;">
+    <sc-for list="{{ presets }}" as="p" hint-placeholder-count="4">
+      <button onClick="{{ p.select }}" title="{{ p.name }}" style="{{ p.swatchStyle }}"></button>
+    </sc-for>
+  </div>
+  <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;padding:11px 12px;border:1px solid var(--border,#E6E8EC);border-radius:var(--radius-md,12px);cursor:pointer;transition:border-color var(--dur-1) var(--ease-standard);" style-hover="border-color:var(--brand-300);">
+    <span style="font-size:12px;font-weight:500;color:var(--text-strong,#1F2430);">Custom colour</span>
+    <span style="display:flex;align-items:center;gap:8px;">
+      <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--text-muted,#5C6370);text-transform:uppercase;">{{ brandPrimary }}</span>
+      <input type="color" value="{{ brandPrimary }}" onInput="{{ onPickPrimary }}" onChange="{{ onPickPrimary }}" style="width:26px;height:26px;border:none;background:none;padding:0;cursor:pointer;border-radius:6px;">
+    </span>
+  </label>
+  <div style="margin-top:12px;display:flex;gap:9px;align-items:flex-start;padding:11px 12px;background:var(--bg-subtle,#F6F7F9);border-radius:var(--radius-md,12px);">
+    <span style="display:flex;gap:4px;flex-shrink:0;margin-top:3px;">
+      <span style="width:9px;height:9px;border-radius:50%;background:var(--success);"></span>
+      <span style="width:9px;height:9px;border-radius:50%;background:var(--danger);"></span>
+      <span style="width:9px;height:9px;border-radius:50%;background:var(--warning);"></span>
+      <span style="width:9px;height:9px;border-radius:50%;background:var(--info);"></span>
+    </span>
+    <span style="font-size:11px;color:var(--text-muted,#5C6370);line-height:1.45;">Semantic colours are fixed and never change with the brand.</span>
+  </div>
+</aside>
+
+<!-- HERO -->
+<div style="max-width:1180px;margin:0 auto;padding:48px 28px 12px;">
+  <div style="display:flex;align-items:center;gap:9px;">
+    <span style="width:13px;height:13px;border-radius:4px;background:var(--brand-primary,#F26B21);transform:rotate(45deg);"></span>
+    <span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.18em;color:var(--brand-700,#B85119);font-weight:600;">CORTEX&nbsp;AI</span>
+  </div>
+  <h1 style="font-family:'Poppins',sans-serif;font-weight:700;font-size:40px;line-height:1.05;letter-spacing:-.022em;color:var(--text-strong,#1F2430);margin:16px 0 0;max-width:780px;">Chat assistant component library</h1>
+  <p style="font-size:16px;line-height:1.55;color:var(--text-muted,#5C6370);max-width:670px;margin:14px 0 0;text-wrap:pretty;">Every reusable component the Cortex AI assistant renders inside the CRM, defined once. The system is white-label ready: one brand token drives the entire palette, while semantic colours stay constant.</p>
+</div>
+
+<!-- BODY -->
+<div style="display:flex;gap:40px;max-width:1180px;margin:0 auto;padding:32px 28px 0;align-items:flex-start;">
+
+  <!-- INDEX NAV -->
+  <nav style="position:sticky;top:24px;flex-shrink:0;width:196px;">
+    <div style="display:flex;flex-direction:column;gap:2px;padding-left:14px;border-left:2px solid var(--hairline);">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="8">
+        <a href="{{ n.href }}" onClick="{{ n.go }}" style="{{ n.style }}" style-hover="background:var(--brand-50);color:var(--brand-700);">{{ n.label }}</a>
+      </sc-for>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main style="flex:1;min-width:0;max-width:818px;">
+
+    <!-- ============ TOKENS ============ -->
+    <section id="tokens" style="scroll-margin-top:24px;margin-bottom:var(--sec-gap,56px);">
+      <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em;color:var(--brand-700,#B85119);font-weight:600;">01</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);margin:8px 0 6px;">Tokens</h2>
+      <p style="font-size:14px;line-height:1.5;color:var(--text-muted,#5C6370);margin:0 0 20px;">The brand colour is tenant-configurable and resolves to a full tonal ramp; everything else stays fixed across tenants.</p>
+
+      <div style="background:var(--bg-card,#fff);border-radius:var(--radius-xl,20px);box-shadow:var(--elev-1);padding:24px;">
+        <div style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);display:flex;align-items:center;gap:8px;">Brand <span style="font-size:11px;font-weight:500;color:var(--brand-700,#B85119);background:var(--brand-50,#FEF3ED);padding:2px 9px;border-radius:999px;">tenant-configurable</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+          <sc-for list="{{ brandColors }}" as="s" hint-placeholder-count="1">
+            <div style="border:1px solid var(--hairline);border-radius:var(--radius-lg,16px);overflow:hidden;">
+              <div style="{{ s.chip }}"></div>
+              <div style="padding:11px 14px;">
+                <div style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);">{{ s.name }}</div>
+                <div style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--text-muted,#5C6370);margin-top:2px;">{{ s.token }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="font-size:12px;line-height:1.45;color:var(--text-muted,#5C6370);margin-top:12px;">Surface, hover, and accessible-text tints are derived automatically — tenants only set the primary brand colour.</div>
+
+        <div style="height:1px;background:var(--hairline);margin:24px 0;"></div>
+
+        <div style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);display:flex;align-items:center;gap:8px;">Semantic <span style="font-size:11px;font-weight:500;color:var(--text-muted,#5C6370);background:var(--bg-subtle,#F6F7F9);padding:2px 9px;border-radius:999px;">fixed</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:14px;">
+          <sc-for list="{{ semanticGroups }}" as="g" hint-placeholder-count="4">
+            <div style="border:1px solid var(--hairline);border-radius:var(--radius-lg,16px);padding:14px;">
+              <div style="display:flex;gap:6px;">
+                <span style="{{ g.s1 }}"></span><span style="{{ g.s2 }}"></span><span style="{{ g.s3 }}"></span>
+              </div>
+              <div style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);margin-top:11px;text-transform:capitalize;">{{ g.name }}</div>
+              <div style="font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:var(--text-muted,#5C6370);margin-top:2px;">strong · bg · border</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="height:1px;background:var(--hairline);margin:24px 0;"></div>
+
+        <div style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);">Neutrals</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:14px;">
+          <sc-for list="{{ neutralSwatches }}" as="s" hint-placeholder-count="4">
+            <div style="border:1px solid var(--hairline);border-radius:var(--radius-md,12px);overflow:hidden;">
+              <div style="{{ s.chip }}"></div>
+              <div style="padding:8px 10px;"><div style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--text-strong,#1F2430);">{{ s.name }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="height:1px;background:var(--hairline);margin:24px 0;"></div>
+
+        <div style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);">Type scale</div>
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:14px;">
+          <sc-for list="{{ typeScale }}" as="t" hint-placeholder-count="5">
+            <div style="display:flex;align-items:baseline;gap:16px;">
+              <span style="{{ t.sample }}">{{ t.role }}</span>
+              <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--text-muted,#5C6370);margin-left:auto;white-space:nowrap;">{{ t.spec }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+      </div>
+      <div style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-muted,#5C6370);">tokens: --brand-primary · derived tints (--brand-50/100/300/700) · --text-strong/muted · --hairline · --bg-surface/subtle · semantic strong/bg/border/deep · --radius-* · --elev-* · --ease-* · --dur-*</div>
+    </section>
+
+    <!-- ============ CHAT PRIMITIVES ============ -->
+    <section id="chat" style="scroll-margin-top:24px;margin-bottom:var(--sec-gap,56px);">
+      <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em;color:var(--brand-700,#B85119);font-weight:600;">02</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);margin:8px 0 6px;">Chat primitives</h2>
+      <p style="font-size:14px;line-height:1.5;color:var(--text-muted,#5C6370);margin:0 0 20px;">The building blocks of a Cortex AI conversation turn.</p>
+
+      <div style="background:var(--bg-card,#fff);border-radius:var(--radius-xl,20px);box-shadow:var(--elev-1);padding:24px;display:flex;flex-direction:column;gap:20px;">
+        <!-- user bubble -->
+        <div style="display:flex;gap:12px;justify-content:flex-end;align-items:flex-end;">
+          <div style="background:var(--brand-primary,#F26B21);color:var(--brand-on,#fff);padding:13px 18px;border-radius:18px 18px 6px 18px;max-width:72%;font-size:15px;line-height:1.55;">Give me key sales figures: total booked revenue, open pipeline value, and active deals.</div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#D9DCE3;flex-shrink:0;background-image:repeating-linear-gradient(45deg,#cfd3da 0 6px,#d9dce3 6px 12px);"></div>
+        </div>
+        <!-- assistant message -->
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--brand-50,#FEF3ED);display:grid;place-items:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="11" rx="4" fill="var(--brand-primary,#F26B21)"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><path d="M12 3.6V8" stroke="var(--brand-primary,#F26B21)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="3" r="1.6" fill="var(--brand-primary,#F26B21)"/></svg></div>
+          <div style="background:var(--brand-50,#FEF3ED);padding:14px 18px;border-radius:6px 18px 18px 18px;max-width:72%;font-size:15px;line-height:1.55;color:var(--text-strong,#1F2430);">Here are the figures you asked for. Total booked revenue is $950,000 year to date, with $2,850,000 in open pipeline across 4 active deals.</div>
+        </div>
+        <!-- typing -->
+        <div style="display:flex;gap:12px;align-items:center;">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--brand-50,#FEF3ED);display:grid;place-items:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="11" rx="4" fill="var(--brand-primary,#F26B21)"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><path d="M12 3.6V8" stroke="var(--brand-primary,#F26B21)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="3" r="1.6" fill="var(--brand-primary,#F26B21)"/></svg></div>
+          <div style="background:var(--bg-card,#fff);box-shadow:var(--elev-2);padding:13px 16px;border-radius:6px 16px 16px 16px;display:flex;gap:5px;align-items:center;">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--brand-primary,#F26B21);animation:ccdot 1.2s infinite;"></span>
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--brand-primary,#F26B21);animation:ccdot 1.2s infinite .18s;"></span>
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--brand-primary,#F26B21);animation:ccdot 1.2s infinite .36s;"></span>
+          </div>
+        </div>
+        <!-- suggestion chips -->
+        <div>
+          <div style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.07em;color:var(--text-muted,#5C6370);font-weight:600;margin-bottom:10px;">SUGGESTED PROMPTS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4">
+              <button style="background:var(--bg-card,#fff);border:1px solid var(--border,#E6E8EC);color:var(--text-strong,#1F2430);font-size:13.5px;padding:8px 14px;border-radius:999px;cursor:pointer;transition:background var(--dur-1) var(--ease-standard),border-color var(--dur-1) var(--ease-standard),color var(--dur-1) var(--ease-standard);" style-hover="border-color:var(--brand-300);background:var(--brand-50);color:var(--brand-700);" style-active="background:var(--brand-100);">{{ c }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <!-- input bar -->
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;border:1.5px solid var(--border,#E6E8EC);border-radius:var(--radius-lg,16px);padding:6px 6px 6px 18px;background:var(--bg-card,#fff);transition:border-color var(--dur-1) var(--ease-standard);" style-hover="border-color:var(--brand-300);">
+            <span style="flex:1;font-size:15px;color:var(--text-faint,#8A909C);">Ask Cortex AI</span>
+            <button style="display:flex;align-items:center;gap:7px;background:var(--brand-primary,#F26B21);color:var(--brand-on,#fff);border:none;font-family:'Poppins',sans-serif;font-weight:500;font-size:14px;padding:10px 16px;border-radius:var(--radius-md,12px);cursor:pointer;transition:background var(--dur-1) var(--ease-standard);" style-hover="background:var(--brand-hover,#D55E1D);" style-active="background:var(--brand-active,#B85119);">Send <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;margin-top:10px;color:var(--text-muted,#5C6370);font-size:12px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Prompts and actions are logged and auditable.</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-muted,#5C6370);">tokens: --brand-primary · --brand-on · --brand-50 · --radius-lg · --elev-2 · state layers: brand-50 hover / brand-100 pressed</div>
+    </section>
+
+    <!-- ============ KPI CARDS ============ -->
+    <section id="kpi" style="scroll-margin-top:24px;margin-bottom:var(--sec-gap,56px);">
+      <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em;color:var(--brand-700,#B85119);font-weight:600;">03</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);margin:8px 0 6px;">KPI / metric cards</h2>
+      <p style="font-size:14px;line-height:1.5;color:var(--text-muted,#5C6370);margin:0 0 20px;">Uppercase label, large tabular value, and a muted sub-line. Used when Cortex surfaces key figures.</p>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--brand-50,#FEF3ED);display:grid;place-items:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="11" rx="4" fill="var(--brand-primary,#F26B21)"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><path d="M12 3.6V8" stroke="var(--brand-primary,#F26B21)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="3" r="1.6" fill="var(--brand-primary,#F26B21)"/></svg></div>
+        <div style="flex:1;min-width:0;background:var(--bg-card,#fff);border-radius:var(--radius-xl,20px);box-shadow:var(--elev-1);padding:24px;">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+            <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="3">
+              <div style="{{ k.cardStyle }}">
+                <div style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.07em;color:var(--text-muted,#5C6370);font-weight:600;">{{ k.label }}</div>
+                <div style="font-family:'Poppins',sans-serif;font-weight:700;font-size:30px;letter-spacing:-.02em;color:var(--text-strong,#1F2430);margin-top:10px;line-height:1;font-variant-numeric:tabular-nums lining-nums;">{{ k.value }}</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+                  <sc-if value="{{ k.delta }}" hint-placeholder-val="">
+                    <span style="{{ k.deltaStyle }}">{{ k.deltaText }}</span>
+                  </sc-if>
+                  <span style="font-size:12px;color:var(--text-muted,#5C6370);">{{ k.sub }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-muted,#5C6370);">tokens: --bg-card · --brand-50 · --bg-subtle · --text-strong/muted · --success/danger-bg/deep · --radius-lg</div>
+    </section>
+
+    <!-- ============ TABLES ============ -->
+    <section id="tables" style="scroll-margin-top:24px;margin-bottom:var(--sec-gap,56px);">
+      <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em;color:var(--brand-700,#B85119);font-weight:600;">04</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);margin:8px 0 6px;">Data table</h2>
+      <p style="font-size:14px;line-height:1.5;color:var(--text-muted,#5C6370);margin:0 0 20px;">Quiet uppercase header, hairline dividers, right-aligned tabular numerics, a status column, and a row-hover state layer.</p>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--brand-50,#FEF3ED);display:grid;place-items:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="11" rx="4" fill="var(--brand-primary,#F26B21)"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><path d="M12 3.6V8" stroke="var(--brand-primary,#F26B21)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="3" r="1.6" fill="var(--brand-primary,#F26B21)"/></svg></div>
+        <div style="flex:1;min-width:0;background:var(--bg-card,#fff);border-radius:var(--radius-xl,20px);box-shadow:var(--elev-1);overflow:hidden;">
+          <div style="display:grid;grid-template-columns:1.5fr 1fr 1.3fr;padding:13px 24px;border-bottom:1px solid var(--hairline);">
+            <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.07em;color:var(--text-muted,#5C6370);font-weight:600;">CUSTOMER</span>
+            <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.07em;color:var(--text-muted,#5C6370);font-weight:600;text-align:right;">VALUE</span>
+            <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.07em;color:var(--text-muted,#5C6370);font-weight:600;padding-left:20px;">STATUS</span>
+          </div>
+          <sc-for list="{{ deals }}" as="d" hint-placeholder-count="5">
+            <div style="{{ d.rowStyle }}" style-hover="background:var(--brand-50);">
+              <span style="font-size:14px;color:var(--text-strong,#1F2430);font-weight:600;">{{ d.c }}</span>
+              <span style="font-size:14px;color:var(--text-strong,#1F2430);text-align:right;font-variant-numeric:tabular-nums lining-nums;">{{ d.v }}</span>
+              <span style="padding-left:20px;"><span style="{{ d.badgeStyle }}"><span style="{{ d.badgeDot }}"></span>{{ d.s }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-muted,#5C6370);">tokens: --bg-card · --hairline · --text-strong/muted · --bg-subtle (zebra) · --brand-50 (row hover) · semantic badge tokens</div>
+    </section>
+
+    <!-- ============ BADGES ============ -->
+    <section id="badges" style="scroll-margin-top:24px;margin-bottom:var(--sec-gap,56px);">
+      <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em;color:var(--brand-700,#B85119);font-weight:600;">05</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);margin:8px 0 6px;">Status badges</h2>
+      <p style="font-size:14px;line-height:1.5;color:var(--text-muted,#5C6370);margin:0 0 20px;">One precise spec: consistent height, a quiet tint, and a colour dot that carries the meaning. Semantic tokens only.</p>
+
+      <div style="background:var(--bg-card,#fff);border-radius:var(--radius-xl,20px);box-shadow:var(--elev-1);padding:8px 24px;">
+        <sc-for list="{{ badges }}" as="b" hint-placeholder-count="5">
+          <div style="{{ b.rowStyle }}">
+            <span style="{{ b.style }}"><span style="{{ b.dot }}"></span>{{ b.l }}</span>
+            <span style="font-size:13px;color:var(--text-muted,#5C6370);">{{ b.meaning }}</span>
+            <span style="font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--text-faint,#8A909C);margin-left:auto;">{{ b.token }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-muted,#5C6370);">tokens: --success/danger/warning/info (dot) · -bg (tint) · -deep (label) · --bg-subtle (neutral)</div>
+    </section>
+
+    <!-- ============ INFO BLOCKS ============ -->
+    <section id="info" style="scroll-margin-top:24px;margin-bottom:var(--sec-gap,56px);">
+      <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em;color:var(--brand-700,#B85119);font-weight:600;">06</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);margin:8px 0 6px;">Information blocks</h2>
+      <p style="font-size:14px;line-height:1.5;color:var(--text-muted,#5C6370);margin:0 0 20px;">One component, one spec: tonal-tint background, a 4px accent, an optically-aligned role icon, identical padding. Only the role colour differs.</p>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <sc-for list="{{ infoBlocks }}" as="b" hint-placeholder-count="5">
+          <div style="{{ b.boxStyle }}">
+            <div style="{{ b.iconStyle }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ b.iconPath }}"/></svg></div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;color:var(--text-strong,#1F2430);">{{ b.title }}</div>
+              <div style="font-size:14px;color:var(--text-muted,#5C6370);line-height:1.5;margin-top:3px;">{{ b.body }}</div>
+              <sc-if value="{{ b.action }}" hint-placeholder-val="">
+                <button style="{{ b.actionStyle }}" style-hover="text-decoration:underline;">{{ b.action }}</button>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-muted,#5C6370);">tokens: --brand-50/primary/700 · semantic -bg (tint) / strong (accent+icon) / -deep (action) · --radius-lg</div>
+    </section>
+
+    <!-- ============ CHARTS ============ -->
+    <section id="charts" style="scroll-margin-top:24px;margin-bottom:var(--sec-gap,56px);">
+      <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em;color:var(--brand-700,#B85119);font-weight:600;">07</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);margin:8px 0 6px;">Charts</h2>
+      <p style="font-size:14px;line-height:1.5;color:var(--text-muted,#5C6370);margin:0 0 20px;">Rendered inside an assistant card. The categorical palette is derived from the brand ramp plus semantic tones, so charts re-theme live. Hover for values.</p>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--brand-50,#FEF3ED);display:grid;place-items:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="11" rx="4" fill="var(--brand-primary,#F26B21)"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><path d="M12 3.6V8" stroke="var(--brand-primary,#F26B21)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="3" r="1.6" fill="var(--brand-primary,#F26B21)"/></svg></div>
+        <div style="flex:1;min-width:0;background:var(--bg-card,#fff);border-radius:var(--radius-xl,20px);box-shadow:var(--elev-1);padding:24px;">
+          <div style="font-size:14px;color:var(--text-strong,#1F2430);margin-bottom:18px;">Cortex showed you these in your last session.</div>
+
+          <!-- BAR -->
+          <div style="position:relative;border:1px solid var(--hairline);border-radius:var(--radius-lg,16px);padding:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;min-height:26px;margin-bottom:8px;">
+              <span style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);">Deal value by customer</span>
+              <sc-if value="{{ barTip }}" hint-placeholder-val=""><span style="animation:cctip var(--dur-1) var(--ease-standard);background:var(--bg-card);box-shadow:var(--elev-3);border:1px solid var(--hairline);color:var(--text-strong);font-size:12px;font-weight:500;padding:5px 11px;border-radius:8px;font-variant-numeric:tabular-nums;">{{ barTip }}</span></sc-if>
+            </div>
+            <svg viewBox="0 0 480 240" style="width:100%;height:auto;font-family:'Inter',sans-serif;">
+              <sc-for list="{{ barTicks }}" as="t" hint-placeholder-count="5">
+                <line x1="52" x2="468" y1="{{ t.y }}" y2="{{ t.y }}" stroke="var(--hairline)" stroke-width="1"></line>
+                <text x="44" y="{{ t.ty }}" text-anchor="end" font-size="11" fill="var(--text-muted,#5C6370)">{{ t.label }}</text>
+              </sc-for>
+              <sc-for list="{{ bars }}" as="b" hint-placeholder-count="5">
+                <path d="{{ b.path }}" fill="{{ b.fill }}" onMouseEnter="{{ b.enter }}" onMouseLeave="{{ b.leave }}" style="cursor:pointer;transition:opacity var(--dur-1) var(--ease-standard);" style-hover="opacity:.82;"></path>
+                <text x="{{ b.cx }}" y="{{ b.vy }}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-strong,#1F2430)" style="font-variant-numeric:tabular-nums;">{{ b.vlabel }}</text>
+                <text x="{{ b.cx }}" y="222" text-anchor="middle" font-size="11" fill="var(--text-muted,#5C6370)">{{ b.l }}</text>
+              </sc-for>
+            </svg>
+          </div>
+
+          <!-- LINE -->
+          <div style="position:relative;border:1px solid var(--hairline);border-radius:var(--radius-lg,16px);padding:18px;margin-top:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;min-height:26px;margin-bottom:8px;">
+              <span style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);">Open pipeline trend</span>
+              <sc-if value="{{ lineTip }}" hint-placeholder-val=""><span style="animation:cctip var(--dur-1) var(--ease-standard);background:var(--bg-card);box-shadow:var(--elev-3);border:1px solid var(--hairline);color:var(--text-strong);font-size:12px;font-weight:500;padding:5px 11px;border-radius:8px;font-variant-numeric:tabular-nums;">{{ lineTip }}</span></sc-if>
+            </div>
+            <svg viewBox="0 0 480 240" style="width:100%;height:auto;font-family:'Inter',sans-serif;">
+              <sc-for list="{{ lineTicks }}" as="t" hint-placeholder-count="4">
+                <line x1="52" x2="468" y1="{{ t.y }}" y2="{{ t.y }}" stroke="var(--hairline)" stroke-width="1"></line>
+                <text x="44" y="{{ t.ty }}" text-anchor="end" font-size="11" fill="var(--text-muted,#5C6370)">{{ t.label }}</text>
+              </sc-for>
+              <polygon points="{{ lineArea }}" fill="var(--brand-100,#FDE7DB)" opacity="0.55"></polygon>
+              <polyline points="{{ linePoints }}" fill="none" stroke="var(--brand-primary,#F26B21)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+              <sc-for list="{{ lineDots }}" as="p" hint-placeholder-count="6">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="11" fill="transparent" onMouseEnter="{{ p.enter }}" onMouseLeave="{{ p.leave }}" style="cursor:pointer;"></circle>
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="4" fill="#fff" stroke="var(--brand-primary,#F26B21)" stroke-width="2.5" style="pointer-events:none;"></circle>
+                <text x="{{ p.x }}" y="222" text-anchor="middle" font-size="11" fill="var(--text-muted,#5C6370)">{{ p.l }}</text>
+              </sc-for>
+            </svg>
+          </div>
+
+          <!-- DONUT -->
+          <div style="position:relative;border:1px solid var(--hairline);border-radius:var(--radius-lg,16px);padding:18px;margin-top:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;min-height:26px;margin-bottom:12px;">
+              <span style="font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;color:var(--text-strong,#1F2430);">Pipeline by stage</span>
+              <sc-if value="{{ donutTip }}" hint-placeholder-val=""><span style="animation:cctip var(--dur-1) var(--ease-standard);background:var(--bg-card);box-shadow:var(--elev-3);border:1px solid var(--hairline);color:var(--text-strong);font-size:12px;font-weight:500;padding:5px 11px;border-radius:8px;font-variant-numeric:tabular-nums;">{{ donutTip }}</span></sc-if>
+            </div>
+            <div style="display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
+              <svg viewBox="0 0 180 180" style="width:168px;height:168px;flex-shrink:0;">
+                <circle cx="90" cy="90" r="70" fill="none" stroke="var(--bg-subtle,#F6F7F9)" stroke-width="24"></circle>
+                <sc-for list="{{ donutSegs }}" as="s" hint-placeholder-count="5">
+                  <circle cx="90" cy="90" r="70" fill="none" stroke="{{ s.color }}" stroke-width="24" stroke-dasharray="{{ s.dash }}" stroke-dashoffset="{{ s.offset }}" stroke-linecap="round" transform="rotate(-90 90 90)" onMouseEnter="{{ s.enter }}" onMouseLeave="{{ s.leave }}" style="cursor:pointer;transition:stroke-width var(--dur-1) var(--ease-standard);" style-hover="stroke-width:28;"></circle>
+                </sc-for>
+                <text x="90" y="84" text-anchor="middle" font-family="'Poppins',sans-serif" font-weight="700" font-size="23" letter-spacing="-0.5" fill="var(--text-strong,#1F2430)">{{ donutTotal }}</text>
+                <text x="90" y="103" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11" fill="var(--text-muted,#5C6370)">pipeline</text>
+              </svg>
+              <div style="display:flex;flex-direction:column;gap:10px;flex:1;min-width:170px;">
+                <sc-for list="{{ donutLegend }}" as="l" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="{{ l.dot }}"></span>
+                    <span style="font-size:13px;color:var(--text-strong,#1F2430);flex:1;">{{ l.label }}</span>
+                    <span style="font-size:13px;color:var(--text-muted,#5C6370);font-variant-numeric:tabular-nums;">{{ l.pct }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-muted,#5C6370);">tokens: --brand-primary · --info · --success · --warning · --text-faint · --hairline · --elev-3 (tooltip)</div>
+    </section>
+
+    <!-- ============ LISTS ============ -->
+    <section id="lists" style="scroll-margin-top:24px;margin-bottom:24px;">
+      <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em;color:var(--brand-700,#B85119);font-weight:600;">08</div>
+      <h2 style="font-family:'Poppins',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--text-strong,#1F2430);margin:8px 0 6px;">Lists</h2>
+      <p style="font-size:14px;line-height:1.5;color:var(--text-muted,#5C6370);margin:0 0 20px;">A compact record list with brand-accent links and a row-hover state layer.</p>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--brand-50,#FEF3ED);display:grid;place-items:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="11" rx="4" fill="var(--brand-primary,#F26B21)"/><circle cx="9.5" cy="13.5" r="1.7" fill="#fff"/><circle cx="14.5" cy="13.5" r="1.7" fill="#fff"/><path d="M12 3.6V8" stroke="var(--brand-primary,#F26B21)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="3" r="1.6" fill="var(--brand-primary,#F26B21)"/></svg></div>
+        <div style="flex:1;min-width:0;background:var(--bg-card,#fff);border-radius:var(--radius-xl,20px);box-shadow:var(--elev-1);overflow:hidden;">
+          <sc-for list="{{ listItems }}" as="i" hint-placeholder-count="4">
+            <div style="{{ i.rowStyle }}" style-hover="background:var(--brand-50);">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--brand-primary,#F26B21);flex-shrink:0;"></span>
+              <div style="flex:1;min-width:0;">
+                <a href="#lists" style="font-size:14.5px;font-weight:600;color:var(--brand-700,#B85119);text-decoration:none;">{{ i.name }}</a>
+                <div style="font-size:12.5px;color:var(--text-muted,#5C6370);margin-top:2px;">{{ i.meta }}</div>
+              </div>
+              <span style="font-size:14px;color:var(--text-strong,#1F2430);font-variant-numeric:tabular-nums lining-nums;">{{ i.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-muted,#5C6370);">tokens: --brand-700 (link) · --brand-primary (dot) · --bg-card · --hairline · --brand-50 (row hover)</div>
+    </section>
+
+  </main>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;brandPrimary&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#F26B21&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Comfortable&quot;,&quot;Compact&quot;],&quot;default&quot;:&quot;Comfortable&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { primary: null, active: 'tokens', hover: null };
+
+  hexToRgb(h){h=(h||'').replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16)||0;return [(n>>16)&255,(n>>8)&255,n&255];}
+  toHex(r,g,b){const f=x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0');return '#'+f(r)+f(g)+f(b);}
+  darken(h,a){const[r,g,b]=this.hexToRgb(h);return this.toHex(r*(1-a),g*(1-a),b*(1-a));}
+  mix(h,a){const[r,g,b]=this.hexToRgb(h);return this.toHex(r+(255-r)*a,g+(255-g)*a,b+(255-b)*a);}
+  roundTopRect(x,y,w,h,r){r=Math.max(0,Math.min(r,h,w/2));return 'M'+x+','+(y+h)+' L'+x+','+(y+r)+' Q'+x+','+y+' '+(x+r)+','+y+' L'+(x+w-r)+','+y+' Q'+(x+w)+','+y+' '+(x+w)+','+(y+r)+' L'+(x+w)+','+(y+h)+' Z';}
+
+  componentDidMount(){
+    const ids=['tokens','chat','kpi','tables','badges','info','charts','lists'];
+    this._obs=new IntersectionObserver((es)=>{
+      es.forEach(e=>{ if(e.isIntersecting) this.setState({active:e.target.id}); });
+    },{rootMargin:'-42% 0px -52% 0px'});
+    ids.forEach(id=>{const el=document.getElementById(id); if(el) this._obs.observe(el);});
+  }
+  componentWillUnmount(){ if(this._obs) this._obs.disconnect(); }
+
+  badgeMeta(k){
+    const S={
+      positive:{deep:'var(--success-deep)',dot:'var(--success)',bg:'var(--success-bg)'},
+      info:{deep:'var(--info-deep)',dot:'var(--info)',bg:'var(--info-bg)'},
+      warning:{deep:'var(--warning-deep)',dot:'var(--warning)',bg:'var(--warning-bg)'},
+      danger:{deep:'var(--danger-deep)',dot:'var(--danger)',bg:'var(--danger-bg)'},
+      neutral:{deep:'#44505F',dot:'#8A93A0',bg:'var(--bg-subtle)'}
+    };
+    const m=S[k]||S.neutral;
+    return {
+      style:{display:'inline-flex',alignItems:'center',gap:'6px',height:'24px',padding:'0 11px',borderRadius:'999px',background:m.bg,color:m.deep,fontSize:'12px',fontWeight:600,letterSpacing:'.01em',whiteSpace:'nowrap'},
+      dot:{width:'6px',height:'6px',borderRadius:'50%',background:m.dot,flexShrink:0}
+    };
+  }
+
+  renderVals(){
+    const brand = this.state.primary || this.props.brandPrimary || '#F26B21';
+    const gap = (this.props.density==='Compact') ? '32px' : '56px';
+    const r=(a)=>this.mix(brand,a), d=(a)=>this.darken(brand,a);
+    // Brand = a single primary colour. Functional surface/hover/text tints are derived from it.
+    const themeVars = {
+      '--brand-primary':brand,
+      '--brand-50':r(.92),'--brand-100':r(.84),'--brand-300':r(.48),'--brand-700':d(.24),
+      '--brand-subtle':r(.92),'--brand-hover':d(.12),'--brand-active':d(.24),'--brand-on':'#FFFFFF',
+      '--bg-surface':r(.95),
+      '--sec-gap':gap
+    };
+
+    // presets
+    const presets=[
+      {id:'rare',name:'Rare Crew',sub:'Orange',color:'#F26B21'},
+      {id:'ocean',name:'Ocean',sub:'Blue',color:'#2563EB'},
+      {id:'forest',name:'Forest',sub:'Teal',color:'#0E8F73'},
+      {id:'plum',name:'Plum',sub:'Magenta',color:'#B5258F'}
+    ].map(p=>{
+      const active = p.color.toLowerCase()===brand.toLowerCase();
+      return {...p,
+        select:()=>this.setState({primary:p.color}),
+        swatchStyle:{width:'38px',height:'38px',borderRadius:'10px',background:p.color,cursor:'pointer',padding:0,border:'none',
+          boxShadow:active?'0 0 0 2px #fff,0 0 0 4px '+p.color:'inset 0 0 0 1px rgba(20,23,33,.14)',
+          transition:'box-shadow var(--dur-1) var(--ease-standard)'}
+      };
+    });
+
+    // nav
+    const nav=[['tokens','Tokens'],['chat','Chat primitives'],['kpi','KPI cards'],['tables','Tables'],['badges','Status badges'],['info','Information blocks'],['charts','Charts'],['lists','Lists']]
+      .map(n=>{
+        const active=this.state.active===n[0];
+        return {id:n[0],label:n[1],href:'#'+n[0],go:()=>this.setState({active:n[0]}),
+          style:{fontSize:'13px',padding:'6px 12px',borderRadius:'8px',textDecoration:'none',transition:'background var(--dur-1) var(--ease-standard),color var(--dur-1) var(--ease-standard)',
+            color:active?'var(--brand-700)':'var(--text-muted)',
+            fontWeight:active?600:500,
+            background:active?'var(--brand-50)':'transparent'}};
+      });
+
+    // token displays
+    const brandColors=[
+      {name:'Primary',token:'--brand-primary',chip:{height:'58px',background:'var(--brand-primary)'}}
+    ];
+    const sg=(name,c,b,bd)=>({name,
+      s1:{flex:1,height:'30px',borderRadius:'6px',background:c},
+      s2:{flex:1,height:'30px',borderRadius:'6px',background:b,border:'1px solid '+bd},
+      s3:{flex:1,height:'30px',borderRadius:'6px',background:bd}});
+    const semanticGroups=[
+      sg('success','var(--success)','var(--success-bg)','var(--success-border)'),
+      sg('danger','var(--danger)','var(--danger-bg)','var(--danger-border)'),
+      sg('warning','var(--warning)','var(--warning-bg)','var(--warning-border)'),
+      sg('info','var(--info)','var(--info-bg)','var(--info-border)')
+    ];
+    const neutralSwatches=[['--text-strong','#1F2430'],['--text-muted','#5C6370'],['--border','#E6E8EC'],['--bg-surface','var(--bg-surface)']]
+      .map(s=>({name:s[0],chip:{height:'44px',background:s[1],borderBottom:'1px solid var(--hairline)'}}));
+
+    const typeScale=[
+      {role:'Display',spec:'Poppins 700 · 40 / 1.05 · -0.02em',sample:{fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:'26px',letterSpacing:'-.02em',color:'var(--text-strong)'}},
+      {role:'Headline',spec:'Poppins 600 · 24 / 1.15 · -0.01em',sample:{fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:'20px',letterSpacing:'-.01em',color:'var(--text-strong)'}},
+      {role:'Title',spec:'Poppins 600 · 14 / 1.3',sample:{fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:'15px',color:'var(--text-strong)'}},
+      {role:'Body',spec:'Inter 400 · 14 / 1.5',sample:{fontFamily:"'Inter',sans-serif",fontWeight:400,fontSize:'15px',color:'var(--text-strong)'}},
+      {role:'LABEL',spec:'mono 600 · 11 · 0.07em',sample:{fontFamily:"ui-monospace,Menlo,monospace",fontWeight:600,fontSize:'12px',letterSpacing:'.07em',color:'var(--text-muted)'}},
+      {role:'Caption',spec:'Inter 400 · 12 / 1.45',sample:{fontFamily:"'Inter',sans-serif",fontWeight:400,fontSize:'13px',color:'var(--text-muted)'}}
+    ];
+
+    const radii=[['xs','6px'],['sm','8px'],['md','12px'],['lg','16px'],['xl','20px']]
+      .map(x=>({label:x[0]+' '+parseInt(x[1]),box:{width:'52px',height:'42px',background:'var(--brand-50)',border:'1.5px solid var(--brand-300)',borderRadius:x[1]}}));
+
+    // chips
+    const chips=['Show deals at risk','Forecast this quarter','Top 5 open opportunities','Summarise Acme Corp'];
+
+    // KPIs
+    const kpis=[
+      {label:'TOTAL BOOKED REVENUE',value:'$950,000',sub:'2026 YTD',delta:'8.2%',dir:'up'},
+      {label:'OPEN PIPELINE VALUE',value:'$2,850,000',sub:'As of 2026-06-16',brand:true},
+      {label:'ACTIVE DEALS',value:'4',sub:'As of 2026-06-16',delta:'1',dir:'down'}
+    ].map(k=>{
+      const up=k.dir==='up';
+      return {...k,
+        cardStyle:{background:k.brand?'var(--brand-50)':'var(--bg-subtle)',borderRadius:'var(--radius-lg)',padding:'16px'},
+        deltaText:(up?'\u25B2 ':'\u25BC ')+k.delta,
+        deltaStyle:k.delta?{display:'inline-flex',alignItems:'center',gap:'3px',fontSize:'12px',fontWeight:600,color:up?'var(--success-deep)':'var(--danger-deep)',background:up?'var(--success-bg)':'var(--danger-bg)',padding:'2px 8px',borderRadius:'999px',fontVariantNumeric:'tabular-nums'}:null
+      };
+    });
+
+    // deals table
+    const deals=[
+      {c:'Acme Corp',v:'$500,000',s:'In Negotiation',k:'warning'},
+      {c:'Global Tech',v:'$1,200,000',s:'Proposal Sent',k:'info'},
+      {c:'Innovate Ltd.',v:'$850,000',s:'Contracting',k:'info'},
+      {c:'Future Dynamics',v:'$950,000',s:'Closed Won',k:'positive'},
+      {c:'Bright Future',v:'$300,000',s:'Initial Contact',k:'neutral'}
+    ].map((d,i)=>{const m=this.badgeMeta(d.k);return {...d,badgeStyle:m.style,badgeDot:m.dot,
+      rowStyle:{display:'grid',gridTemplateColumns:'1.5fr 1fr 1.3fr',alignItems:'center',padding:'15px 24px',transition:'background var(--dur-1) var(--ease-standard)',
+        background:i%2===1?'var(--bg-subtle)':'var(--bg-card)',
+        borderTop:i===0?'none':'1px solid var(--hairline)'}};});
+
+    // badges
+    const meanings={positive:'Won / complete',info:'In progress',warning:'Needs attention',neutral:'Inactive / draft',danger:'Critical / overdue'};
+    const toks={positive:'--success',info:'--info',warning:'--warning',neutral:'--bg-subtle',danger:'--danger'};
+    const badges=[
+      {l:'Closed Won',k:'positive'},{l:'In Progress',k:'info'},{l:'In Negotiation',k:'warning'},{l:'Draft',k:'neutral'},{l:'Overdue',k:'danger'}
+    ].map((b,i)=>{const m=this.badgeMeta(b.k);return {...b,style:m.style,dot:m.dot,meaning:meanings[b.k],token:toks[b.k],
+      rowStyle:{display:'flex',alignItems:'center',gap:'16px',padding:'14px 0',borderTop:i===0?'none':'1px solid var(--hairline)'}};});
+
+    // info blocks
+    const ICON={diamond:'M12 4l7 8-7 8-7-8z',check:'M5 13l4 4 10-10',alert:'M12 7v6 M12 17h.01',info:'M12 11v6 M12 8h.01'};
+    const semBox={positive:{c:'var(--success)',b:'var(--success-bg)',deep:'var(--success-deep)'},danger:{c:'var(--danger)',b:'var(--danger-bg)',deep:'var(--danger-deep)'},warning:{c:'var(--warning)',b:'var(--warning-bg)',deep:'var(--warning-deep)'},info:{c:'var(--info)',b:'var(--info-bg)',deep:'var(--info-deep)'}};
+    const infoRaw=[
+      {kind:'brand',icon:'diamond',title:'Featured insight',body:'Open pipeline is up 12% versus last quarter, led by enterprise deals.',action:'View pipeline'},
+      {kind:'positive',icon:'check',title:'Closed won',body:'Future Dynamics ($950,000) moved to Closed Won this week.',action:'Open deal'},
+      {kind:'danger',icon:'alert',title:'At risk',body:'Acme Corp ($500,000) has been in negotiation beyond the expected cycle.',action:'Review deal'},
+      {kind:'warning',icon:'alert',title:'Needs attention',body:'Three deals are missing a next step. Assign owners to keep them moving.',action:'Assign owners'},
+      {kind:'info',icon:'info',title:'For your information',body:'The quarterly forecast refreshes automatically on 2026-06-30.',action:null}
+    ];
+    const infoBlocks=infoRaw.map(b=>{
+      const m = b.kind==='brand' ? {c:'var(--brand-primary)',b:'var(--brand-50)',deep:'var(--brand-700)'} : semBox[b.kind];
+      return {...b,iconPath:ICON[b.icon],
+        boxStyle:{display:'flex',gap:'14px',alignItems:'flex-start',background:m.b,borderLeft:'4px solid '+m.c,borderRadius:'var(--radius-lg)',padding:'16px 18px'},
+        iconStyle:{width:'30px',height:'30px',borderRadius:'9px',background:m.c,display:'grid',placeItems:'center',flexShrink:0,marginTop:'1px'},
+        actionStyle:{marginTop:'9px',background:'none',border:'none',padding:0,color:m.deep,fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:'13px',cursor:'pointer'}
+      };
+    });
+
+    // ---- charts ----
+    const x0=52,x1=468,top=20,bot=190;
+    const barRaw=[['Acme',500,'var(--warning)'],['Global',1200,'var(--info)'],['Innovate',850,'var(--brand-primary)'],['Future',950,'var(--success)'],['Bright',300,'var(--text-faint)']];
+    const bMax=1200, slot=(x1-x0)/barRaw.length, bw=44;
+    const bars=barRaw.map((dd,i)=>{
+      const v=dd[1], h=v/bMax*(bot-top), x=x0+slot*i+(slot-bw)/2, y=bot-h;
+      const full='$'+(v*1000).toLocaleString();
+      return {l:dd[0],v,fill:dd[1]?dd[2]:dd[2],path:this.roundTopRect(Math.round(x),Math.round(y),bw,Math.round(h),5),cx:Math.round(x+bw/2),vy:Math.round(y-7),vlabel:'$'+v+'K',
+        enter:()=>this.setState({hover:{chart:'bar',label:dd[0],value:full}}),leave:()=>this.setState({hover:null})};
+    });
+    const barTicks=[0,300,600,900,1200].map(t=>{const y=bot-(t/bMax*(bot-top));return {y:Math.round(y),ty:Math.round(y+4),label:t===0?'0':('$'+t+'K')};});
+    // line
+    const lvRaw=[['Jan',1.8],['Feb',2.1],['Mar',2.0],['Apr',2.4],['May',2.6],['Jun',2.85]];
+    const lMax=3, lstep=(x1-x0)/(lvRaw.length-1);
+    const lineDots=lvRaw.map((dd,i)=>{
+      const x=x0+lstep*i, y=bot-(dd[1]/lMax*(bot-top)), full='$'+dd[1].toFixed(2)+'M';
+      return {x:Math.round(x),y:Math.round(y),l:dd[0],
+        enter:()=>this.setState({hover:{chart:'line',label:dd[0],value:full}}),leave:()=>this.setState({hover:null})};
+    });
+    const linePoints=lineDots.map(p=>p.x+','+p.y).join(' ');
+    const lineArea=x0+','+bot+' '+linePoints+' '+x1+','+bot;
+    const lineTicks=[0,1,2,3].map(t=>{const y=bot-(t/lMax*(bot-top));return {y:Math.round(y),ty:Math.round(y+4),label:t===0?'0':('$'+t+'M')};});
+    // donut
+    const dRaw=[['In Negotiation',500,'var(--warning)'],['Proposal Sent',1200,'var(--info)'],['Contracting',850,'var(--brand-primary)'],['Closed Won',950,'var(--success)'],['Initial Contact',300,'var(--text-faint)']];
+    const dTotal=dRaw.reduce((s,x)=>s+x[1],0);
+    const C=2*Math.PI*70, gapPx=3; let cum=0;
+    const donutSegs=[], donutLegend=[];
+    dRaw.forEach(dd=>{
+      const frac=dd[1]/dTotal, len=frac*C, vis=Math.max(0,len-gapPx), pct=Math.round(frac*100), val='$'+(dd[1]*1000).toLocaleString();
+      donutSegs.push({color:dd[2],dash:vis.toFixed(2)+' '+(C-vis).toFixed(2),offset:(-cum).toFixed(2),
+        enter:()=>this.setState({hover:{chart:'donut',label:dd[0],value:val+' · '+pct+'%'}}),leave:()=>this.setState({hover:null})});
+      donutLegend.push({label:dd[0],pct:pct+'%',dot:{width:'10px',height:'10px',borderRadius:'3px',background:dd[2],flexShrink:0}});
+      cum+=len;
+    });
+    const donutTotal='$'+(dTotal/1000).toFixed(1)+'M';
+
+    const hv=this.state.hover;
+    const tip=(c)=>hv&&hv.chart===c?hv.label+' · '+hv.value:null;
+
+    // lists
+    const listItems=[
+      {name:'Acme Corp',meta:'In Negotiation · Owner: A. Kostic',value:'$500,000'},
+      {name:'Global Tech',meta:'Proposal Sent · Owner: M. Mlak',value:'$1,200,000'},
+      {name:'Innovate Ltd.',meta:'Contracting · Owner: A. Kostic',value:'$850,000'},
+      {name:'Future Dynamics',meta:'Closed Won · Owner: M. Mlak',value:'$950,000'}
+    ].map((it,i)=>({...it,rowStyle:{display:'flex',alignItems:'center',gap:'12px',padding:'15px 22px',transition:'background var(--dur-1) var(--ease-standard)',borderTop:i===0?'none':'1px solid var(--hairline)'}}));
+
+    return {themeVars, presets, nav, brandPrimary:brand,
+      onPickPrimary:(e)=>this.setState({primary:e.target.value}),
+      brandColors, semanticGroups, neutralSwatches, typeScale, radii,
+      chips, kpis, deals, badges, infoBlocks, listItems,
+      bars, barTicks, lineDots, linePoints, lineArea, lineTicks, donutSegs, donutLegend, donutTotal,
+      barTip:tip('bar'), lineTip:tip('line'), donutTip:tip('donut')
+    };
+  }
+}
+</script>
+</body>
+</html>
