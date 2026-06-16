@@ -1,59 +1,77 @@
-@use 'sass:meta';
+/* styles.scss — resets, animations, bridge aliases.
+   cortex-design-tokens.css (loaded first) is the token source of truth. */
 
-* { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+
 body {
   margin: 0;
-  background: #F1F2F4;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #1F2430;
+  background: var(--neutral-100, #F1F3F6);
+  font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+  color: var(--text-strong, #1F2430);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
 button { font-family: inherit; }
 a { color: inherit; }
 
+/* =============================================================================
+   BRIDGE ALIASES
+   Old var(--name) references resolve here while components migrate to new names.
+   ============================================================================= */
 :root {
-  --text-strong: #1F2430;
-  --text-muted: #5C6370;
-  --text-faint: #8A909C;
-  --border: #E6E8EC;
-  --hairline: rgba(20, 23, 33, .07);
-  --bg-page: #FFFFFF;
-  --bg-card: #FFFFFF;
-  --bg-subtle: #F6F7F9;
+  --bg-card:    var(--neutral-0);
+  --bg-subtle:  var(--surface-muted);
+  --bg-surface: var(--surface-brand);
+  --hairline:   var(--divider);
+  --border:     var(--neutral-200);
 
-  --success: #1F9D55; --success-bg: #E9F6EE; --success-border: #BFE6CC; --success-deep: #0F7A43;
-  --danger: #D64545; --danger-bg: #FBEBEA; --danger-border: #F3C9C7; --danger-deep: #B5302F;
-  --warning: #C77700; --warning-bg: #FFF6E5; --warning-border: #FAE3B3; --warning-deep: #8A5500;
-  --info: #2B6CB0; --info-bg: #EAF2FB; --info-border: #C6DBF2; --info-deep: #1F517F;
+  --elev-1: var(--elevation-1);
+  --elev-2: var(--elevation-2);
+  --elev-3: var(--elevation-3);
 
-  --radius-xs: 6px; --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px; --radius-pill: 999px;
+  --dur-1: var(--duration-short);
+  --dur-2: var(--duration-medium);
+  --ease-standard: var(--easing-standard);
 
-  --elev-1: 0 1px 2px rgba(20,23,33,.04), 0 1px 3px rgba(20,23,33,.05);
-  --elev-2: 0 2px 4px rgba(20,23,33,.04), 0 6px 16px rgba(20,23,33,.06);
-  --elev-3: 0 4px 10px rgba(20,23,33,.06), 0 14px 34px rgba(20,23,33,.13);
+  --success:      var(--success-main);
+  --success-deep: var(--success-strong);
+  --danger:       var(--danger-main);
+  --danger-deep:  var(--danger-strong);
+  --warning:      var(--warning-main);
+  --warning-deep: var(--warning-strong);
+  --info:         var(--info-main);
+  --info-deep:    var(--info-strong);
 
-  --ease-standard: cubic-bezier(.2,0,0,1);
-  --dur-1: 150ms; --dur-2: 250ms;
-
-  /* Brand defaults (overridden by ThemeService) */
-  --brand-primary: #F26B21;
-  --brand-50: #FEF3ED;
-  --brand-100: #FDE7DB;
-  --brand-300: #F8B28C;
-  --brand-700: #B85119;
-  --brand-hover: #D55E1D;
-  --brand-active: #B85119;
-  --bg-surface: #FEF6F1;
+  /* radius — old scale mapped to new */
+  --radius-xl: var(--radius-lg);   /* 20px */
 }
 
+/* =============================================================================
+   KEYFRAMES
+   ============================================================================= */
+@keyframes ccdot {
+  0%, 80%, 100% { transform: translateY(0); opacity: .32; }
+  40%           { transform: translateY(-4px); opacity: 1; }
+}
+
+@keyframes cctip {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* =============================================================================
+   FOCUS — global baseline; cortex-ui components also add .cortex-focusable.
+   ============================================================================= */
 :focus-visible {
-  outline: 2px solid var(--brand-primary);
-  outline-offset: 2px;
-  border-radius: 5px;
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--brand-primary));
+  outline-offset: var(--focus-ring-offset, 2px);
+  border-radius: var(--radius-xs);
 }
 
+/* prefers-reduced-motion — token file zeroes the duration vars;
+   this guard covers anything that bypasses them. */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: .001ms !important;
@@ -61,14 +79,4 @@ a { color: inherit; }
     transition-duration: .001ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-@keyframes ccdot {
-  0%, 80%, 100% { transform: translateY(0); opacity: .32; }
-  40% { transform: translateY(-4px); opacity: 1; }
-}
-
-@keyframes cctip {
-  from { opacity: 0; transform: translateY(3px); }
-  to { opacity: 1; transform: none; }
 }

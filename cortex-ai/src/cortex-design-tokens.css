@@ -1,0 +1,258 @@
+/* =============================================================================
+   CORTEX AI — DESIGN TOKENS
+   Single source of truth for the Cortex chat design system.
+   Default theme: Rare Crew (orange).
+
+   HOW TO USE (Angular)
+   --------------------------------------------------------------------------
+   1. Import this file once, globally (e.g. in styles.scss or angular.json
+      "styles"). It defines everything on :root.
+   2. In any component stylesheet, reference tokens with var():
+         .kpi-value { color: var(--text-strong); font: var(--type-kpi); }
+         .send-btn  { background: var(--brand-primary); color: var(--color-on-brand); }
+   3. Never hard-code a hex/size in a component. If a value is missing here,
+      add a token — don't inline it. That is what keeps the system consistent.
+
+   WHITE-LABEL THEMING
+   --------------------------------------------------------------------------
+   Only ONE section is tenant-configurable: "1. BRAND (TENANT-CONFIGURABLE)".
+   Everything else (neutrals, semantic colours, type, spacing) is fixed and
+   shared across all tenants.
+
+   To re-skin for a tenant at RUNTIME, set a data-theme attribute on <html>
+   and override the brand ramp in a scoped block (see "TENANT EXAMPLE" at the
+   bottom). Because these are CSS variables, the swap is instant and needs no
+   rebuild — load the tenant's brand block, and every component re-themes.
+   ============================================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* ==========================================================================
+     1. BRAND  (TENANT-CONFIGURABLE)  ← the only block a tenant overrides
+     Tonal ramp 50→900. 500 is the primary brand colour.
+     ========================================================================== */
+  --brand-50:  #FEF3EC;   /* lightest tint — subtle surfaces, soft fills      */
+  --brand-100: #FCE0CE;
+  --brand-200: #FAC6A3;
+  --brand-300: #F7A871;
+  --brand-400: #F58C47;
+  --brand-500: #F26B21;   /* PRIMARY — Rare Crew orange                        */
+  --brand-600: #D85A15;   /* hover                                            */
+  --brand-700: #B4490F;   /* pressed / active                                 */
+  --brand-800: #8A3A0E;
+  --brand-900: #5E280B;
+
+  /* Brand role aliases — components reference THESE, not the raw ramp. */
+  --brand-primary:  var(--brand-500);
+  --brand-hover:    var(--brand-600);
+  --brand-active:   var(--brand-700);
+  --brand-subtle:   var(--brand-50);   /* tinted surface behind brand content */
+  --color-on-brand: #FFFFFF;           /* text/icons on a solid brand fill     */
+  /* NOTE: white on --brand-500 is ~3:1 (AA-large only). For small/regular
+     white text on a brand fill, use --brand-600 as the fill instead.          */
+
+  /* ==========================================================================
+     2. NEUTRALS  (FIXED)
+     ========================================================================== */
+  --neutral-0:   #FFFFFF;
+  --neutral-50:  #F8F9FB;
+  --neutral-100: #F1F3F6;
+  --neutral-200: #E7E9EE;
+  --neutral-300: #D5D9E0;
+  --neutral-400: #B0B6C0;
+  --neutral-500: #6B7280;
+  --neutral-600: #4B515C;
+  --neutral-700: #343A44;
+  --neutral-800: #232830;
+  --neutral-900: #1F2430;
+
+  /* ==========================================================================
+     3. SEMANTIC COLOURS  (FIXED — meaning, never brand)
+     Each role: -bg (soft surface), -border, -main (accent/icon), -strong (text-safe).
+     ========================================================================== */
+  /* Success — green */
+  --success-bg:     #E9F6EE;
+  --success-border: #BFE6CC;
+  --success-main:   #1F9D55;
+  --success-strong: #178045;
+  --success-on:     #FFFFFF;
+
+  /* Danger — red (alerts, at-risk, overdue, lost) */
+  --danger-bg:      #FBEBEA;
+  --danger-border:  #F3C9C7;
+  --danger-main:    #D64545;
+  --danger-strong:  #B5302F;
+  --danger-on:      #FFFFFF;
+
+  /* Warning — amber (needs attention) */
+  --warning-bg:     #FFF6E5;
+  --warning-border: #FAE3B3;
+  --warning-main:   #C77700;   /* darkened so it passes AA on white            */
+  --warning-strong: #9E5E00;
+  --warning-on:     #1F2430;   /* amber fills take DARK text                   */
+
+  /* Info — blue (FYI / a different category of message) */
+  --info-bg:        #EAF2FB;
+  --info-border:    #C6DBF2;
+  --info-main:      #2B6CB0;
+  --info-strong:    #21548A;
+  --info-on:        #FFFFFF;
+
+  /* ==========================================================================
+     4. SURFACES, TEXT, BORDERS  (semantic aliases of neutrals)
+     ========================================================================== */
+  --bg-page:        var(--neutral-0);
+  --bg-card:        var(--neutral-0);
+  --surface-muted:  var(--neutral-50);    /* quiet panels, zebra rows          */
+  --surface-brand:  var(--brand-subtle);  /* KPI cards, brand info block       */
+
+  --text-strong:    var(--neutral-900);   /* headings, primary content         */
+  --text-body:      var(--neutral-700);   /* body copy                         */
+  --text-muted:     var(--neutral-500);   /* labels, captions, sub-lines       */
+  --text-on-dark:   var(--neutral-0);
+
+  --border:         var(--neutral-200);   /* default hairline                  */
+  --border-strong:  var(--neutral-300);
+  --divider:        rgba(31, 36, 48, 0.08); /* low-opacity table/list dividers */
+
+  /* ==========================================================================
+     5. TYPOGRAPHY
+     ========================================================================== */
+  --font-heading: "Poppins", "Nunito Sans", system-ui, sans-serif;
+  --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Type roles — shorthand: weight size/line-height family. Tracking is set
+     separately because the font shorthand can't carry letter-spacing.         */
+  --type-display:  600 1.75rem/2.25rem var(--font-heading);  /* 28/36          */
+  --type-headline: 600 1.375rem/1.875rem var(--font-heading);/* 22/30          */
+  --type-title:    600 1.125rem/1.625rem var(--font-heading);/* 18/26          */
+  --type-body-lg:  400 1rem/1.5rem var(--font-body);         /* 16/24          */
+  --type-body:     400 0.875rem/1.375rem var(--font-body);   /* 14/22          */
+  --type-label:    600 0.8125rem/1.125rem var(--font-body);  /* 13/18          */
+  --type-caption:  500 0.75rem/1rem var(--font-body);        /* 12/16          */
+  --type-kpi:      700 1.75rem/2rem var(--font-heading);     /* 28/32          */
+
+  --tracking-tight:   -0.02em;   /* display / large headings                   */
+  --tracking-normal:  0;
+  --tracking-label:   0.02em;
+  --tracking-caption: 0.06em;    /* uppercase micro-labels                     */
+
+  /* Use on numeric columns / KPI values so digits align in a column. */
+  --numeric-tabular: tabular-nums lining-nums;
+
+  /* ==========================================================================
+     6. SPACING  (4px base grid — snap everything to this)
+     ========================================================================== */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4  */
+  --space-2: 0.5rem;    /* 8  */
+  --space-3: 0.75rem;   /* 12 */
+  --space-4: 1rem;      /* 16 */
+  --space-5: 1.5rem;    /* 24 */
+  --space-6: 2rem;      /* 32 */
+  --space-7: 3rem;      /* 48 */
+  --space-8: 4rem;      /* 64 */
+
+  /* ==========================================================================
+     7. SHAPE  (corner radii — apply by component size, never mix arbitrarily)
+     ========================================================================== */
+  --radius-xs:   6px;    /* badges, small chips                               */
+  --radius-sm:   8px;    /* inputs, small controls                            */
+  --radius-md:   14px;   /* cards, info blocks, message bubbles               */
+  --radius-lg:   20px;   /* large panels                                      */
+  --radius-pill: 999px;  /* user bubbles, pills                               */
+
+  /* ==========================================================================
+     8. ELEVATION  (soft, layered shadows — restrained)
+     ========================================================================== */
+  --elevation-0: none;
+  --elevation-1: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.04);
+  --elevation-2: 0 2px 4px rgba(16, 24, 40, 0.06), 0 4px 8px rgba(16, 24, 40, 0.05);
+  --elevation-3: 0 4px 8px rgba(16, 24, 40, 0.06), 0 12px 24px rgba(16, 24, 40, 0.08);
+
+  /* ==========================================================================
+     9. MOTION
+     ========================================================================== */
+  --duration-short:  150ms;
+  --duration-medium: 250ms;
+  --duration-long:   400ms;
+  --easing-standard:   cubic-bezier(0.2, 0, 0, 1);
+  --easing-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  /* ==========================================================================
+     10. INTERACTION STATES
+     State layers = a low-opacity overlay of an element's OWN role colour.
+     Apply hover/focus/pressed using these opacities, not a different colour.
+     ========================================================================== */
+  --state-hover-opacity:   0.08;
+  --state-focus-opacity:   0.12;
+  --state-pressed-opacity: 0.16;
+
+  --focus-ring-color:  var(--brand-primary);
+  --focus-ring-width:  2px;
+  --focus-ring-offset: 2px;
+}
+
+/* =============================================================================
+   ACCESSIBLE FOCUS — reuse on every interactive element.
+   ============================================================================= */
+.cortex-focusable:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* =============================================================================
+   REDUCED MOTION
+   ============================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-short:  0ms;
+    --duration-medium: 0ms;
+    --duration-long:   0ms;
+  }
+}
+
+/* =============================================================================
+   TENANT EXAMPLE — white-label in action.
+   Drop a tenant's brand ramp in a scoped block and set
+   <html data-theme="ocean">. Only the brand block changes; nothing else.
+   Generate one of these per tenant (only the 50→900 ramp + role aliases).
+   ============================================================================= */
+[data-theme="ocean"] {
+  --brand-50:  #E9F2FB;
+  --brand-100: #CBDFF6;
+  --brand-200: #9BC2EC;
+  --brand-300: #66A1E0;
+  --brand-400: #3D86D6;
+  --brand-500: #1F6FCB;   /* PRIMARY — example tenant blue                     */
+  --brand-600: #195CAA;
+  --brand-700: #134A8A;
+  --brand-800: #0E3A6E;
+  --brand-900: #0A2A50;
+
+  --brand-primary: var(--brand-500);
+  --brand-hover:   var(--brand-600);
+  --brand-active:  var(--brand-700);
+  --brand-subtle:  var(--brand-50);
+}
+
+/* =============================================================================
+   CHART CATEGORICAL PALETTE  — derived from brand ramp + semantic mains.
+   Re-themes automatically when the brand ramp changes.
+   ============================================================================= */
+:root {
+  --chart-1: var(--brand-primary);   /* brand */
+  --chart-2: var(--info-main);       /* blue  */
+  --chart-3: var(--success-main);    /* green */
+  --chart-4: var(--warning-main);    /* amber */
+  --chart-5: var(--danger-main);     /* red   */
+  --chart-6: var(--neutral-400);     /* quiet grey for residual/other */
+
+  /* text-faint alias (no direct equivalent in token file) */
+  --text-faint: var(--neutral-400);
+
+  /* brand-on alias for legacy usage */
+  --brand-on: var(--color-on-brand);
+}

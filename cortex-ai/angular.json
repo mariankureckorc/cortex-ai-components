@@ -35,6 +35,7 @@
               }
             ],
             "styles": [
+              "src/cortex-design-tokens.css",
               "src/styles.scss"
             ],
             "scripts": []
